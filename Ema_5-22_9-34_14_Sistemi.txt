@@ -1,0 +1,107 @@
+//O2can O2bek (Özcan Özbek)
+//@version=5
+indicator(title='Ema 5/22 9/34 14 Sistemi - V1.0', shorttitle='Ema 5/22 9/34 14 Sistemi - V1.0', overlay=true, timeframe="")
+src = close //input(close, title='Source')
+
+
+//aç kapa
+acE522 = input(defval = true, title = 'Ema 5/22 Göstergeleri Gösterilsin mi?')   
+acE934 = input(defval = true, title = 'Ema 9/34 Göstergeleri Gösterilsin mi?')   
+acE14 = input(defval = true, title = 'Ema 14 Göstergeleri Gösterilsin mi?')   
+acFiboLines = input(defval = true, title = 'Fibo Yatay Çizgileri Gösterilsin mi?')   
+
+
+
+//Fibo Yatay Çizgileri
+len = 200
+fractal_top = 0.0
+fractal_top := high < high[2] and high[1] < high[2] and high[3] < high[2] and high[4] < high[2] ? high[2] : fractal_top[1]
+fractal_bottom = 0.0
+fractal_bottom := low > low[2] and low[1] > low[2] and low[3] > low[2] and low[4] > low[2] ? low[2] : fractal_bottom[1]
+
+srcHigh = ta.highest(fractal_top, len)
+srcLow = ta.lowest(fractal_bottom, len)
+diff = srcHigh - srcLow
+line0000 = srcLow
+line0236 = srcLow + diff * 0.236
+line0382 = srcLow + diff * 0.382
+line0500 = srcLow + diff * 0.500
+line0618 = srcLow + diff * 0.618
+line0786 = srcLow + diff * 0.786
+line1000 = srcHigh
+line1272 = srcLow + diff * 1.272
+line1414 = srcLow + diff * 1.414
+line1618 = srcLow + diff * 1.618
+line2000 = srcLow + diff * 2.000
+line2272 = srcLow + diff * 2.272
+line1272_2 = srcHigh - diff * 1.272
+line1414_2 = srcHigh - diff * 1.414
+line1618_2 = srcHigh - diff * 1.618
+line2000_2 = srcHigh - diff * 2.000
+line2272_2 = srcHigh - diff * 2.272
+
+plot(line0000 and acFiboLines ? line0000 : na, title='0.000', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0236 and acFiboLines ? line0236 : na, title='0.236', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0382 and acFiboLines ? line0382 : na, title='0.382', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0500 and acFiboLines ? line0500 : na, title='0.500', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0618 and acFiboLines ? line0618 : na, title='0.618', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line0786 and acFiboLines ? line0786 : na, title='0.786', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1000 and acFiboLines ? line1000 : na, title='1.000', color=color.new(#2E9AFE, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1272 and acFiboLines ? line1272 : na, title='1.272', color=color.new(color.green, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1414 and acFiboLines ? line1414 : na, title='1.414', color=color.new(color.green, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1618 and acFiboLines ? line1618 : na, title='1.618', color=color.new(color.green, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2000 and acFiboLines ? line2000 : na, title='2.000', color=color.new(color.green, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2272 and acFiboLines ? line2272 : na, title='2.272', color=color.new(color.green, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1272_2 and acFiboLines ? line1272_2 : na, title='-0.272', color=color.new(color.red, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1414_2 and acFiboLines ? line1414_2 : na, title='-0.414', color=color.new(color.red, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line1618_2 and acFiboLines ? line1618_2 : na, title='-0.618', color=color.new(color.red, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2000_2 and acFiboLines ? line2000_2 : na, title='-1.000', color=color.new(color.red, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+plot(line2272_2 and acFiboLines ? line2272_2 : na, title='-1.272', color=color.new(color.red, 25), style=plot.style_cross, trackprice=true, offset=-9999, linewidth=1)
+
+
+
+//EMA 5/22
+lenEma5 = 5
+outEma5 = ta.ema(close, lenEma5)
+
+lenEma22 = 22
+outEma22 = ta.ema(close, lenEma22)
+
+pEma5 = plot(outEma5 and acE522 ? outEma5: na, title="EMA 5", color=color.new(color.lime, 100), offset=0, linewidth=2, style=plot.style_line)
+pEma22 = plot(outEma22 and acE522 ? outEma22 : na, title="EMA 22", color=color.new(color.red, 100), offset=0, linewidth=2, style=plot.style_line)
+fill(pEma5, pEma22, title = 'Ema 5/22 Bölgesi', color=outEma5 >= outEma22 ? color.new(color.lime, 50) : color.new(color.red, 50))
+
+ema5YukariKesEma22 = ta.crossover(outEma5, outEma22)
+plotshape(ema5YukariKesEma22 and acE522 ? ema5YukariKesEma22 : na ,title ='E5/22 AL', text='E5/22', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.small)
+alertcondition(ema5YukariKesEma22, title="E5/22 AL", message='E5/22 AL {{ticker}}, FİYAT={{close}}')
+
+ema5AsagiKesEma22 = ta.crossunder(outEma5, outEma22)
+plotshape(ema5AsagiKesEma22  and acE522 ? ema5AsagiKesEma22 : na ,title ='E5/22 SAT', text='E5/22', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.small)
+alertcondition(ema5AsagiKesEma22, title="E5/22 SAT", message='E5/22 SAT {{ticker}}, FİYAT={{close}}')
+
+//EMA 9/34
+lenEma9 = 9
+outEma9 = ta.ema(close, lenEma9)
+
+lenEma34 = 34
+outEma34 = ta.ema(close, lenEma34)
+
+pEma9 = plot(outEma9 and acE934 ? outEma9: na, title="EMA 9", color=color.new(color.white, 100), offset=0, linewidth=2, style=plot.style_line)
+pEma34 = plot(outEma34 and acE934 ? outEma34 : na, title="EMA 34", color=color.new(color.yellow, 100), offset=0, linewidth=2, style=plot.style_line)
+fill(pEma9, pEma34, title = 'Ema 9/34 Bölgesi', color=outEma9 >= outEma34 ? color.new(color.white, 50) : color.new(color.yellow, 50))
+
+ema9YukariKesEma34 = ta.crossover(outEma9, outEma34)
+plotshape(ema9YukariKesEma34  and acE934 ? ema9YukariKesEma34 : na ,title ='E9/34 AL', text='E9/34', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.small)
+alertcondition(ema9YukariKesEma34, title="E9/34 AL", message='E9/34 AL {{ticker}}, FİYAT={{close}}')
+
+ema9AsagiKesEma34 = ta.crossunder(outEma9, outEma34)
+plotshape(ema9AsagiKesEma34  and acE934 ? ema9AsagiKesEma34 : na ,title ='E9/34 SAT', text='E9/34', style=shape.triangledown, location=location.abovebar, color=color.new(color.orange, 0), offset=0, size=size.small)
+alertcondition(ema9AsagiKesEma34, title="E9/34 SAT", message='E9/34SAT {{ticker}}, FİYAT={{close}}')
+
+//EMA 9/34
+lenEma14 = 14
+outEma14 = ta.ema(close, lenEma14)
+pEma14 = plot(outEma14 and acE14 ? outEma14: na, title="EMA 14", color=color.new(color.lime, 0), offset=0, linewidth=2, style=plot.style_line)
+
+
+///HEDEFE VARDI
