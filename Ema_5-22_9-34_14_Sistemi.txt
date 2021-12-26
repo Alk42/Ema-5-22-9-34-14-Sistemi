@@ -1,19 +1,22 @@
 //O2can O2bek (Özcan Özbek)
 //@version=5
-indicator(title='Ema 5/22 9/34 14 Sistemi - V1.0', shorttitle='Ema 5/22 9/34 14 Sistemi - V1.0', overlay=true, timeframe="")
+indicator(title='Ema 5/22 9/34 14 Sistemi - V1.1', shorttitle='Ema 5/22 9/34 14 Sistemi - V1.1', overlay=true, timeframe="")
 src = close //input(close, title='Source')
 
 
 //aç kapa
 acE522 = input(defval = true, title = 'Ema 5/22 Göstergeleri Gösterilsin mi?')   
+acE522alSat = input(defval = false, title = 'Ema 5/22 Al/Sat Gösterilsin mi?')   
 acE934 = input(defval = true, title = 'Ema 9/34 Göstergeleri Gösterilsin mi?')   
-acE14 = input(defval = true, title = 'Ema 14 Göstergeleri Gösterilsin mi?')   
+acE934alSat = input(defval = false, title = 'Ema 9/34 Al/Sat Gösterilsin mi?')   
+acE14 = input(defval = false, title = 'Ema 14 Göstergeleri Gösterilsin mi?')   
 acFiboLines = input(defval = true, title = 'Fibo Yatay Çizgileri Gösterilsin mi?')   
+acTema = input(defval = false, title = 'Tema Çizgileri Gösterilsin mi?')   
 
 
 
 //Fibo Yatay Çizgileri
-len = 200
+len = input(defval = 200, title = 'Fibo Hesaplama Mum Sayısı') 
 fractal_top = 0.0
 fractal_top := high < high[2] and high[1] < high[2] and high[3] < high[2] and high[4] < high[2] ? high[2] : fractal_top[1]
 fractal_bottom = 0.0
@@ -72,11 +75,11 @@ pEma22 = plot(outEma22 and acE522 ? outEma22 : na, title="EMA 22", color=color.n
 fill(pEma5, pEma22, title = 'Ema 5/22 Bölgesi', color=outEma5 >= outEma22 ? color.new(color.lime, 50) : color.new(color.red, 50))
 
 ema5YukariKesEma22 = ta.crossover(outEma5, outEma22)
-plotshape(ema5YukariKesEma22 and acE522 ? ema5YukariKesEma22 : na ,title ='E5/22 AL', text='E5/22', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.small)
+plotshape(ema5YukariKesEma22 and acE522alSat ? ema5YukariKesEma22 : na ,title ='E5/22 AL', text='E5/22', style=shape.triangleup, location=location.belowbar, color=color.new(color.lime, 0), offset=0, size=size.small)
 alertcondition(ema5YukariKesEma22, title="E5/22 AL", message='E5/22 AL {{ticker}}, FİYAT={{close}}')
 
 ema5AsagiKesEma22 = ta.crossunder(outEma5, outEma22)
-plotshape(ema5AsagiKesEma22  and acE522 ? ema5AsagiKesEma22 : na ,title ='E5/22 SAT', text='E5/22', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.small)
+plotshape(ema5AsagiKesEma22  and acE522alSat ? ema5AsagiKesEma22 : na ,title ='E5/22 SAT', text='E5/22', style=shape.triangledown, location=location.abovebar, color=color.new(color.red, 0), offset=0, size=size.small)
 alertcondition(ema5AsagiKesEma22, title="E5/22 SAT", message='E5/22 SAT {{ticker}}, FİYAT={{close}}')
 
 //EMA 9/34
@@ -91,17 +94,46 @@ pEma34 = plot(outEma34 and acE934 ? outEma34 : na, title="EMA 34", color=color.n
 fill(pEma9, pEma34, title = 'Ema 9/34 Bölgesi', color=outEma9 >= outEma34 ? color.new(color.white, 50) : color.new(color.yellow, 50))
 
 ema9YukariKesEma34 = ta.crossover(outEma9, outEma34)
-plotshape(ema9YukariKesEma34  and acE934 ? ema9YukariKesEma34 : na ,title ='E9/34 AL', text='E9/34', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.small)
+plotshape(ema9YukariKesEma34  and acE934alSat ? ema9YukariKesEma34 : na ,title ='E9/34 AL', text='E9/34', style=shape.triangleup, location=location.belowbar, color=color.new(color.white, 0), offset=0, size=size.small)
 alertcondition(ema9YukariKesEma34, title="E9/34 AL", message='E9/34 AL {{ticker}}, FİYAT={{close}}')
 
 ema9AsagiKesEma34 = ta.crossunder(outEma9, outEma34)
-plotshape(ema9AsagiKesEma34  and acE934 ? ema9AsagiKesEma34 : na ,title ='E9/34 SAT', text='E9/34', style=shape.triangledown, location=location.abovebar, color=color.new(color.orange, 0), offset=0, size=size.small)
+plotshape(ema9AsagiKesEma34  and acE934alSat ? ema9AsagiKesEma34 : na ,title ='E9/34 SAT', text='E9/34', style=shape.triangledown, location=location.abovebar, color=color.new(color.orange, 0), offset=0, size=size.small)
 alertcondition(ema9AsagiKesEma34, title="E9/34 SAT", message='E9/34SAT {{ticker}}, FİYAT={{close}}')
 
 //EMA 9/34
 lenEma14 = 14
 outEma14 = ta.ema(close, lenEma14)
 pEma14 = plot(outEma14 and acE14 ? outEma14: na, title="EMA 14", color=color.new(color.lime, 0), offset=0, linewidth=2, style=plot.style_line)
+
+
+length0 = 20 //input.int(20, minval=1)
+e11 = ta.ema(src, length0)
+e12 = ta.ema(e11, length0)
+e13 = ta.ema(e12, length0)
+dema1 = 3 * (e11 - e12) + e13  //tema20
+plot(dema1 and acTema ? dema1 : na, 'Tema 20', color=color.new(color.white, 0), linewidth=2)
+
+length2 = 50 //input.int(50, minval=1)
+e21 = ta.ema(src, length2)
+e22 = ta.ema(e21, length2)
+e23 = ta.ema(e22, length2)
+dema2 = 3 * (e21 - e22) + e23  //tema50 
+plot(dema2 and acTema ? dema2 : na, 'Tema 50', color=color.new(color.yellow, 0), linewidth=3)
+
+length3 = 100 //input.int(100, minval=1)
+e31 = ta.ema(src, length3)
+e32 = ta.ema(e31, length3)
+e33 = ta.ema(e32, length3)
+dema3 = 3 * (e31 - e32) + e33    //tema100
+plot(dema3 and acTema ? dema3 : na, 'Tema 100', color=color.new(color.blue, 0), linewidth=3)
+
+length4 = 200 //input.int(200, minval=1)
+e41 = ta.ema(src, length4)
+e42 = ta.ema(e41, length4)
+e43 = ta.ema(e42, length4)
+dema4 = 3 * (e41 - e42) + e43    //tema200
+plot(dema4 and acTema ? dema4 : na, 'Tema 200', color=color.new(#be660b, 0), linewidth=4)
 
 
 ///HEDEFE VARDI
