@@ -14,14 +14,6 @@ acFiboLines = input(defval = true, title = 'Fibo Yatay Çizgileri Gösterilsin m
 acTema = input(defval = false, title = 'Tema Çizgileri Gösterilsin mi?')   
 acST  = input(defval = false, title = 'Süper Trend Gösterilsin mi?')   
 
-// Super Trend
-atrPeriod = 10 // input(10, "ATR Length")
-factor = 3.0 //input.float(3.0, "Factor", step = 0.01)
-[supertrend, direction] = ta.supertrend(factor, atrPeriod)
-upTrend = plot(direction < 0 and acST ? supertrend : na, "Up Trend", color = color.lime, style=plot.style_linebr,linewidth=4)
-downTrend = plot(direction < 0 ? na : supertrend and acST ? supertrend : na, "Down Trend", color = color.red, style=plot.style_linebr,linewidth=4)
-//
-
 //Fibo Yatay Çizgileri
 len = input(defval = 200, title = 'Fibo Hesaplama Mum Sayısı') 
 fractal_top = 0.0
@@ -141,6 +133,16 @@ e42 = ta.ema(e41, length4)
 e43 = ta.ema(e42, length4)
 dema4 = 3 * (e41 - e42) + e43    //tema200
 plot(dema4 and acTema ? dema4 : na, 'Tema 200', color=color.new(#be660b, 0), linewidth=4)
+
+
+// Super Trend
+atrPeriod = 10 // input(10, "ATR Length")
+factor = 3.0 //input.float(3.0, "Factor", step = 0.01)
+[supertrend, direction] = ta.supertrend(factor, atrPeriod)
+upTrend = plot(direction < 0 and acST ? supertrend : na, "Up Trend", color = color.lime, style=plot.style_linebr,linewidth=4)
+downTrend = plot(direction < 0 ? na : supertrend and acST ? supertrend : na, "Down Trend", color = color.red, style=plot.style_linebr,linewidth=4)
+//
+
 
 
 ///HEDEFE VARDI
