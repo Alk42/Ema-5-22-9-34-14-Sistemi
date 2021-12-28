@@ -1,6 +1,6 @@
 //O2can O2bek (Özcan Özbek)
 //@version=5
-indicator(title='Ema 5/22 9/34 14 Sistemi - V1.2', shorttitle='Ema 5/22 9/34 14 Sistemi - V1.2', overlay=true, timeframe="")
+indicator(title='Ema 5/22 9/34 14 Sistemi - V1.3', shorttitle='Ema 5/22 9/34 14 Sistemi - V1.3', overlay=true, timeframe="")
 src = close //input(close, title='Source')
 
 
@@ -13,6 +13,7 @@ acE14 = input(defval = false, title = 'Ema 14 Göstergeleri Gösterilsin mi?')
 acFiboLines = input(defval = true, title = 'Fibo Yatay Çizgileri Gösterilsin mi?')   
 acTema = input(defval = false, title = 'Tema Çizgileri Gösterilsin mi?')   
 acST  = input(defval = false, title = 'Süper Trend Gösterilsin mi?')   
+acPPST  = input(defval = true, title = 'Pivot Point Süper Trend Gösterilsin mi?')   
 
 //Fibo Yatay Çizgileri
 len = input(defval = 200, title = 'Fibo Hesaplama Mum Sayısı') 
@@ -139,10 +140,52 @@ plot(dema4 and acTema ? dema4 : na, 'Tema 200', color=color.new(#be660b, 0), lin
 atrPeriod = 10 // input(10, "ATR Length")
 factor = 3.0 //input.float(3.0, "Factor", step = 0.01)
 [supertrend, direction] = ta.supertrend(factor, atrPeriod)
-upTrend = plot(direction < 0 and acST ? supertrend : na, "Up Trend", color = color.lime, style=plot.style_linebr,linewidth=4)
-downTrend = plot(direction < 0 ? na : supertrend and acST ? supertrend : na, "Down Trend", color = color.red, style=plot.style_linebr,linewidth=4)
+upTrend = plot(direction < 0 and acST ? supertrend : na, "Super Trend - Up Trend", color = color.lime, style=plot.style_linebr,linewidth=4)
+downTrend = plot(direction < 0 ? na : supertrend and acST ? supertrend : na, "Super Trend - Down Trend", color = color.red, style=plot.style_linebr,linewidth=4)
 //
 
+
+// Pivot Point Super Trend
+
+
+prd = 2
+Factor = 3
+Pd = 10
+
+// get Pivot High/Low
+float ph = ta.pivothigh(prd, prd)
+float pl = ta.pivotlow(prd, prd)
+
+// calculate the Center line using pivot points
+var float center = na
+float lastpp = ph ? ph : pl ? pl : na
+if lastpp
+    if na(center)
+        center := lastpp
+        center
+    else
+        //weighted calculation
+        center := (center * 2 + lastpp) / 3
+        center
+
+// upper/lower bands calculation
+Up = center - Factor * ta.atr(Pd)
+Dn = center + Factor * ta.atr(Pd)
+
+// get the trend
+float TUp = na
+float TDown = na
+Trend = 0
+TUp := close[1] > TUp[1] ? math.max(Up, TUp[1]) : Up
+TDown := close[1] < TDown[1] ? math.min(Dn, TDown[1]) : Dn
+Trend := close > TDown[1] ? 1 : close < TUp[1] ? -1 : nz(Trend[1], 1)
+Trailingsl = Trend == 1 ? TUp : TDown
+
+// plot the trend
+linecolor = Trend == 1 and nz(Trend[1]) == 1 ? color.lime : Trend == -1 and nz(Trend[1]) == -1 ? color.red : na
+plot(Trailingsl and acPPST ? Trailingsl : na , color=linecolor, linewidth=4, title='Pivot Point Super Trend')
+
+//
 
 
 ///HEDEFE VARDI
